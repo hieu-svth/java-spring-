@@ -8,7 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,6 +63,61 @@ public class ProductController {
 
         // save product
         this.productService.handleSaveProduct(product);
+        return "redirect:/admin/product";
+    }
+
+    @RequestMapping("/admin/product/{id}")
+    public String getProductDetailPage(Model model, @PathVariable long id) {
+        Product product = this.productService.getProductById(id);
+        model.addAttribute("product", product);
+        model.addAttribute("id", id);
+        return "admin/product/detail";
+    }
+
+    @RequestMapping("/admin/product/update/{id}")
+    public String getUpdateProductProductPage(Model model, @PathVariable long id) {
+        Product currentProduct = this.productService.getProductById(id);
+        model.addAttribute("newProduct", currentProduct);
+        return "admin/product/update";
+    }
+
+    @PostMapping("/admin/product/update")
+    public String postUpdateProductPage(Model model, @ModelAttribute("newProduct") Product product,
+            BindingResult newProductBindingResult,
+            @RequestParam("hoidanitFile") MultipartFile file) {
+        List<FieldError> errors = newProductBindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            System.out.println(error.getField() + " - " + error.getDefaultMessage());
+        }
+        if (newProductBindingResult.hasErrors()) {
+            return "admin/product/update";
+        }
+        Product currentProduct = this.productService.getProductById(product.getId());
+        if (currentProduct != null) {
+            if (!file.isEmpty()) {
+                String img = this.uploadService.handleSaveFile(file, "product");
+                currentProduct.setImage(img);
+            }
+            currentProduct.setName(product.getName());
+            currentProduct.setPrice(product.getPrice());
+            currentProduct.setDetailDesc(product.getDetailDesc());
+            currentProduct.setShortDesc(product.getShortDesc());
+
+            this.productService.handleSaveProduct(currentProduct);
+        }
+        return "redirect:/admin/product";
+    }
+
+    @RequestMapping("/admin/product/delete/{id}")
+    public String getDelteProductPage(Model model, @PathVariable long id) {
+        model.addAttribute("id", id);
+        model.addAttribute("newProduct", new Product());
+        return "admin/product/delete";
+    }
+
+    @PostMapping("/admin/product/delete")
+    public String postDeleteUserPage(Model model, @ModelAttribute("newProduct") Product product) {
+        this.productService.handleDeleteProduct(product.getId());
         return "redirect:/admin/product";
     }
 }
