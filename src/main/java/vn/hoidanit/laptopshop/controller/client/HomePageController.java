@@ -51,6 +51,10 @@ public class HomePageController {
         for (FieldError error : errors) {
             System.out.println(error.getField() + " - " + error.getDefaultMessage());
         }
+        if (bindingResult.hasErrors()) {
+            return "client/auth/register";
+
+        }
         User user = this.userService.registerDTOtoUser(registerDTO);
 
         String hashPassWord = this.passwordEncoder.encode(user.getPassword());
