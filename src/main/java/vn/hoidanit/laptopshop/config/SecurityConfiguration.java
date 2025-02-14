@@ -21,6 +21,12 @@ import vn.hoidanit.laptopshop.service.UserService;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
+    private final UserService userService;
+
+    public SecurityConfiguration(UserService userService) {
+        this.userService = userService;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -45,7 +51,7 @@ public class SecurityConfiguration {
     }
 
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new CustomSuccessHandler();
+        return new CustomSuccessHandler(userService);
     }
 
     @Bean
