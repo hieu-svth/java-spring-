@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
 import vn.hoidanit.laptopshop.domain.Product;
-import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UploadService;
 
@@ -68,7 +67,7 @@ public class ProductController {
 
     @RequestMapping("/admin/product/{id}")
     public String getProductDetailPage(Model model, @PathVariable long id) {
-        Product product = this.productService.getProductById(id);
+        Product product = this.productService.getProductById(id).get();
         model.addAttribute("product", product);
         model.addAttribute("id", id);
         return "admin/product/detail";
@@ -76,7 +75,7 @@ public class ProductController {
 
     @RequestMapping("/admin/product/update/{id}")
     public String getUpdateProductProductPage(Model model, @PathVariable long id) {
-        Product currentProduct = this.productService.getProductById(id);
+        Product currentProduct = this.productService.getProductById(id).get();
         model.addAttribute("newProduct", currentProduct);
         return "admin/product/update";
     }
@@ -92,7 +91,7 @@ public class ProductController {
         if (newProductBindingResult.hasErrors()) {
             return "admin/product/update";
         }
-        Product currentProduct = this.productService.getProductById(product.getId());
+        Product currentProduct = this.productService.getProductById(product.getId()).get();
         if (currentProduct != null) {
             if (!file.isEmpty()) {
                 String img = this.uploadService.handleSaveFile(file, "product");
