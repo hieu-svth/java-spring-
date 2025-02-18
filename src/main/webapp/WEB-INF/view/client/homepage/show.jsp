@@ -88,7 +88,6 @@
                                                                     <a href="/product/${product.id}">
                                                                         ${product.name}
                                                                     </a>
-
                                                                 </h4>
                                                                 <p style="font-size: 13px;">${product.shortDesc}</p>
                                                                 <div class="d-flex  flex-lg-wrap justify-content-center">
