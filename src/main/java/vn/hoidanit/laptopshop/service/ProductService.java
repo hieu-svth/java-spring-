@@ -52,8 +52,48 @@ public class ProductService {
         return this.productRepository.findAll(page);
     }
 
-    public Page<Product> getAllProductsWithSpec(Pageable page, String name) {
-        return this.productRepository.findAll(ProductSpecs.nameLike(name), page);
+    // public Page<Product> getAllProductsWithSpec(Pageable page, String name) {
+    // return this.productRepository.findAll(ProductSpecs.nameLike(name), page);
+    // }
+
+    // case 1:
+    // public Page<Product> getAllProductsWithSpec(Pageable page, double min) {
+    // return this.productRepository.findAll(ProductSpecs.minPrice(min), page);
+    // }
+
+    // case2:
+    // public Page<Product> getAllProductsWithSpec(Pageable page, double max) {
+    // return this.productRepository.findAll(ProductSpecs.maxPrice(max), page);
+    // }
+
+    // case 3:
+    // public Page<Product> getAllProductsWithSpec(Pageable page, String factory) {
+    // return this.productRepository.findAll(ProductSpecs.matchFactory(factory),
+    // page);
+    // }
+
+    // case 4:
+    // public Page<Product> getAllProductsWithSpec(Pageable page, List<String>
+    // factory) {
+    // return this.productRepository.findAll(ProductSpecs.matchListFactory(factory),
+    // page);
+    // }
+
+    // case 5:
+    public Page<Product> getAllProductsWithSpec(Pageable page, String price) {
+        if (price.equals("10-toi-15-trieu")) {
+            System.out.println("da vao day roi nhe @412414124");
+            double min = 10000000;
+            double max = 15000000;
+            return this.productRepository.findAll(ProductSpecs.matchPrice(min, max),
+                    page);
+        } else if (price.equals("15-toi-30-trieu")) {
+            double min = 15000000;
+            double max = 30000000;
+            return this.productRepository.findAll(ProductSpecs.matchPrice(min, max),
+                    page);
+        } else
+            return this.productRepository.findAll(page);
     }
 
     public Optional<Product> getProductById(long id) {
