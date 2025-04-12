@@ -141,10 +141,10 @@ public class ItemController {
     @GetMapping("/products")
     public String getProductPage(Model model, @RequestParam("page") Optional<String> pageOptional,
             @RequestParam("name") Optional<String> nameOptional,
-            @RequestParam("min-price") Optional<String> minOptional,
-            @RequestParam("max-price") Optional<String> maxOptional,
             @RequestParam("factory") Optional<String> factoryOptional,
-            @RequestParam("price") Optional<String> priceOptional) {
+            @RequestParam("target") Optional<String> targetOptional,
+            @RequestParam("price") Optional<String> priceOptional,
+            @RequestParam("sort") Optional<String> sortOptional) {
         int page = 1;
         try {
             if (pageOptional.isPresent()) {
@@ -181,9 +181,17 @@ public class ItemController {
         // Page<Product> prs = this.productService.getAllProductsWithSpec(pageable,
         // factory);
 
-        String price = priceOptional.isPresent() ? priceOptional.get() : "";
+        // String price = priceOptional.isPresent() ? priceOptional.get() : "";
+        // Page<Product> prs = this.productService.getAllProductsWithSpec(pageable,
+        // price);
+
+        // List<String> price = Arrays.asList(priceOptional.get().split(","));
+        // Page<Product> prs = this.productService.getAllProductsWithSpec(pageable,
+        // price);
+
+        String name = nameOptional.isPresent() ? nameOptional.get() : "";
         Page<Product> prs = this.productService.getAllProductsWithSpec(pageable,
-                price);
+                name);
 
         List<Product> products = prs.getContent();
 
